@@ -1084,7 +1084,7 @@ class Evaluator(object):
             )
 
         return (points, msg_list)
-
+    
     def rda_a1_02m(self):
         """Indicator RDA-A1-02M
         This indicator is linked to the following principle: A1: (Meta)data are retrievable by their
@@ -1186,6 +1186,7 @@ class Evaluator(object):
             Message with the results or recommendations to improve this indicator
         """
         points = 0
+
         msg = "Metadata can not be found"
         try:
             item_id_http = idutils.to_url(

@@ -1456,19 +1456,19 @@ def rda_all(body, eva):
                                 }
                             }
                         )
-                except Exception as e:
+                except Exception as ex:
                     logger.error(
                         "Problem in data test - %s | Probably this test does not exist for this plugin"
                         % x_principle
                     )
-        except Exception as e:
+        except Exception as ex:
             logger.error("Problem in test - %s" % x_principle)
             if "Findable" in x_principle:
                 findable.update(
                     {
                         indi_code: {
                             "name": "[ERROR] - %s" % indi_code,
-                            "msg": "Exception: %s" % e,
+                            "msg": "Exception: %s" % ex,
                             "points": points,
                             "color": ut.get_color(points),
                             "test_status": ut.test_status(points),
@@ -1485,7 +1485,7 @@ def rda_all(body, eva):
                     {
                         indi_code: {
                             "name": "[ERROR] - %s" % indi_code,
-                            "msg": "Exception: %s" % e,
+                            "msg": "Exception: %s" % ex,
                             "points": points,
                             "color": ut.get_color(points),
                             "test_status": ut.test_status(points),
@@ -1502,7 +1502,7 @@ def rda_all(body, eva):
                     {
                         indi_code: {
                             "name": "[ERROR] - %s" % indi_code,
-                            "msg": "Exception: %s" % e,
+                            "msg": "Exception: %s" % ex,
                             "points": points,
                             "color": ut.get_color(points),
                             "test_status": ut.test_status(points),
@@ -1519,7 +1519,7 @@ def rda_all(body, eva):
                     {
                         indi_code: {
                             "name": "[ERROR] - %s" % indi_code,
-                            "msg": "Exception: %s" % e,
+                            "msg": "Exception: %s" % ex,
                             "points": points,
                             "color": ut.get_color(points),
                             "test_status": ut.test_status(points),
@@ -1531,7 +1531,7 @@ def rda_all(body, eva):
                         }
                     }
                 )
-            logger.error(e)
+            logger.error(ex)
 
     if len(data_test) > 0:
         result = {

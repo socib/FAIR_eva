@@ -775,7 +775,7 @@ class Plugin(Evaluator):
 
         return (points, msg_list)
 
-    @ConfigTerms(term_id="terms_access")
+    @ConfigTerms(term_id="terms_data_access")
     def rda_a1_03d(self, **kwargs):
         """Indicator RDA-A1-03D: Data identifier resolves to a digital object.
 

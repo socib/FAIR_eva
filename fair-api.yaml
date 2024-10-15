@@ -9,6 +9,7 @@ servers:
 paths:
   /rda:
     x-indicator: False
+    x-data_test: False
     get:
       summary: Perform test#1
       tags:
@@ -42,6 +43,7 @@ paths:
 
   /endpoints:
     x-indicator: False
+    x-data_test: False
     get:
       summary: Return all the possible endpoints in a JSON format
       tags:
@@ -79,6 +81,7 @@ paths:
 
   /rda/rda_all:
     x-indicator: False
+    x-data_test: False
     post:
       summary: Run all RDA indicators tests
       tags:
