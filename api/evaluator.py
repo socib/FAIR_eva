@@ -144,13 +144,13 @@ class ConfigTerms(property):
                         "Not proceeding with metadata value homogenization and validation"
                     )
                 else:
-                    term_values = term_values[
-                        0
-                    ]  # NOTE: is it safe to take always the first element?
-                    logger_api.warning(
-                        "Considering only first element of the values returned: %s"
-                        % term_values
-                    )
+#                    term_values = term_values[
+#                        0
+#                    ]  # NOTE: is it safe to take always the first element?
+#                    logger_api.warning(
+#                        "Considering only first element of the values returned: %s"
+#                        % term_values
+#                    )
                     logger.debug(
                         "Values found for metadata element '%s': %s"
                         % (term_key_harmonized, term_values)
@@ -165,7 +165,7 @@ class ConfigTerms(property):
                     )
                     # Raise exception if the homogenization resulted in no values
                     if not term_values_list:
-                        raise Exception(
+                        logger.info(
                             "No values for metadata element '%s' resulted from the homogenization process"
                             % term_key_harmonized
                         )
@@ -252,6 +252,7 @@ class ConfigTerms(property):
                     #           <metadata_element_1>: [<metadata_value_1>, ..]
                     #       }
                     kwargs.update({term_key_harmonized: term_values_list})
+                    kwargs.update({self.term_id: {"list": term_list, "metadata": term_metadata}})
 
             logger.info(
                 "Passing metadata elements and associated values to wrapped method '%s': %s"
