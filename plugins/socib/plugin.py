@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup as bs
 import pandas as pd
 
 from api.evaluator import ConfigTerms, Evaluator
+from api.vocabulary import Vocabulary
 
 logging.basicConfig(
     stream=sys.stdout, level=logging.DEBUG, format="'%(name)s:%(lineno)s' | %(message)s"
@@ -251,6 +252,7 @@ class Plugin(Evaluator):
         super().__init__(item_id, oai_base, lang, plugin, config)
         # TO REDEFINE - WHICH IS YOUR PID TYPE?
         self.id_type = "internal"
+        self.vocabulary = Vocabulary(config)
 
         global _
         _ = super().translation()
