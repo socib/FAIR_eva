@@ -519,17 +519,17 @@ class Evaluator(object):
                 self.config[self.name]["metadata_standard"]
             )
             self.fairsharing_username = ast.literal_eval(
-                self.config["fairsharing"]["username"]
+                self.config["vocabularies:fairsharing"]["remote_username"]
             )
 
             self.fairsharing_password = ast.literal_eval(
-                self.config["fairsharing"]["password"]
+                self.config["vocabularies:fairsharing"]["remote_password"]
             )
             self.fairsharing_metadata_path = ast.literal_eval(
-                self.config["fairsharing"]["metadata_path"]
+                self.config["vocabularies:fairsharing"]["metadata_path"]
             )
             self.fairsharing_formats_path = ast.literal_eval(
-                self.config["fairsharing"]["formats_path"]
+                self.config["vocabularies:fairsharing"]["local_path"]
             )
             self.internet_media_types_path = ast.literal_eval(
                 self.config["internet media types"]["path"]
@@ -2175,34 +2175,21 @@ class Evaluator(object):
         """
         msg = "No metadata standard"
         points = 0
-        offline = True
-        if self.metadata_standard == []:
-            return (points, [{"message": msg, "points": points}])
 
-        try:
-            f = open(self.fairsharing_metadata_path[0])
-            f.close()
-
-        except:
-            msg = "The config.ini fairshraing metatdata_path does not arrive at any file. Try 'static/fairsharing_metadata_standards140224.json'"
-            return (points, [{"message": msg, "points": points}])
-
-        if self.fairsharing_username != [""]:
-            offline = False
-
-        fairsharing = ut.get_fairsharing_metadata(
-            offline,
-            password=self.fairsharing_password[0],
-            username=self.fairsharing_username[0],
-            path=self.fairsharing_metadata_path[0],
-        )
-        for standard in fairsharing["data"]:
+        for standard in self.vocabulary.get_fairsharing(
+            search_topic=self.metadata_standard[0]
+        ):
             if self.metadata_standard[0] == standard["attributes"]["abbreviation"]:
                 points = 100
+                logger.debug(
+                    "Metadata standard '%s' found under FAIRsharing registry"
+                    % self.metadata_standard[0]
+                )
                 msg = "Metadata standard in use complies with a community standard according to FAIRsharing.org"
+
         return (points, [{"message": msg, "points": points}])
 
-    @ConfigTerms(term_id="terms_reusability_richness")
+    @ConfigTerms(term_id="terms_reusability_richness", validate=True)
     def rda_r1_3_01d(self, **kwargs):
         """Indicator RDA-R1.3-01D: Data complies with a community standard.
 
@@ -2216,65 +2203,9 @@ class Evaluator(object):
         points
            100/100 if the data standard appears in Fairsharing (0/100 otherwise)
         """
-        msg = "No metadata standard"
-        points = 0
-        offline = True
-        availableFormats = []
-        fairformats = []
-        path = self.fairsharing_formats_path[0]
+        (_msg, _points) = self.eval_validated_basic(kwargs)
 
-        if self.metadata_standard == []:
-            return (points, [{"message": msg, "points": points}])
-
-        terms_reusability_richness = kwargs["terms_reusability_richness"]
-        terms_reusability_richness_list = terms_reusability_richness["list"]
-        terms_reusability_richness_metadata = terms_reusability_richness["metadata"]
-
-        element = terms_reusability_richness_metadata.loc[
-            terms_reusability_richness_metadata["element"].isin(["availableFormats"]),
-            "text_value",
-        ].values[0]
-        for form in element:
-            availableFormats.append(form["label"])
-
-        try:
-            f = open(path)
-            f.close()
-
-        except:
-            msg = "The config.ini fairshraing metatdata_path does not arrive at any file. Try 'static/fairsharing_formats260224.txt'"
-            if offline == True:
-                return (points, [{"message": msg, "points": points}])
-
-        if self.fairsharing_username != [""]:
-            offline = False
-
-        if offline == False:
-            fairsharing = ut.get_fairsharing_formats(
-                offline,
-                password=self.fairsharing_password[0],
-                username=self.fairsharing_username[0],
-                path=path,
-            )
-
-            for fform in fairsharing["data"]:
-                q = fform["attributes"]["name"][24:]
-                fairformats.append(q)
-
-        else:
-            f = open(path, "r")
-            text = f.read()
-            fairformats = text.splitlines()
-
-        for fform in fairformats:
-            for aform in availableFormats:
-                if fform.casefold() == aform.casefold():
-                    if points == 0:
-                        msg = "Your item follows the comunity standard formats: "
-                    points = 100
-                    msg += "  " + str(aform)
-
-        return (points, [{"message": msg, "points": points}])
+        return (_points, [{"message": _msg, "points": _points}])
 
     def rda_r1_3_02m(self, **kwargs):
         """Indicator RDA-1.3-02M: Metadata is expressed in compliance with a machine-
