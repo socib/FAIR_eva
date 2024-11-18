@@ -717,7 +717,10 @@ def orcid_basic_info(orcid):
     except Exception as e:
         logging.error(e)
         return basic_info
-    basic_info = "ORCID Name: %s" % item[0].text
+    if item:
+        basic_info = "ORCID Name: %s" % item[0].text
+    else:
+        logger.warning("No person data found in {}".format(url))    
     return basic_info
 
 
