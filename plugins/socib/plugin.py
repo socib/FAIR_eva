@@ -160,7 +160,7 @@ class MetadataValues(MetadataValuesBase):
             }]
         """
         person_data = [
-            ut.get_orcid_str(value_data["@id"])
+            value_data["@id"]
             for value_data in element_values
             if "@id" in value_data
         ]
@@ -233,6 +233,37 @@ class MetadataValues(MetadataValuesBase):
         Return a list of licenses: for the moment we consider licenses as descriptions
         """
         return cls._get_description(element_values)
+    
+    def _validate_license(self, licenses, vocabularies, machine_readable=False):
+        license_data = {}
+        for vocabulary_id, vocabulary_url in vocabularies.items():
+            # Store successfully validated licenses, grouped by CV
+            license_data[vocabulary_id] = {"valid": [], "non_valid": []}
+            # SPDX
+            if vocabulary_id in ["spdx"]:
+                logger_api.debug(
+                    "Validating licenses according to SPDX vocabulary: %s" % licenses
+                )
+                for _license in licenses:
+                    if ut.is_spdx_license(_license, machine_readable=machine_readable):
+                        logger.debug(
+                            "License successfully validated according to SPDX vocabulary: %s"
+                            % _license
+                        )
+                        license_data[vocabulary_id]["valid"].append(_license)
+                    else:
+                        logger.warning(
+                            "Could not find any license match in SPDX vocabulary for '%s'"
+                            % _license
+                        )
+                        license_data[vocabulary_id]["non_valid"].append(_license)
+            else:
+                logger.warning(
+                    "Validation of vocabulary '%s' not yet implemented" % vocabulary_id
+                )
+
+        return license_data
+
 
 
 class Plugin(Evaluator):
@@ -607,7 +638,41 @@ class Plugin(Evaluator):
         )
 
         return points, msg_list
-    
+
+    def rda_a1_04m(self, return_protocol=False):
+        """Indicator RDA-A1-04M: Metadata is accessed through standarised protocol.
+
+        This indicator is linked to the following principle: A1: (Meta)data are retrievable by their
+        identifier using a standardised communication protocol.
+
+        The indicator concerns the protocol through which the metadata is accessed and requires
+        the protocol to be defined in a standard.
+
+        Returns
+        -------
+        points
+            100/100 if the endpoint protocol is in the accepted list of standarised protocols
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        points = 0
+
+        protocol = ut.get_protocol_scheme(self.item_id)
+        if protocol in self.terms_access_protocols:
+            points = 100
+            msg = "Found a standarised protocol to access the metadata record: " + str(
+                protocol
+            )
+        else:
+            msg = (
+                "Found a non-standarised protocol to access the metadata record: %s"
+                % str(protocol)
+            )
+        msg_list = [{"message": msg, "points": points}]
+
+        if return_protocol:
+            return (points, msg_list, protocol)
+
     def rda_a1_05d(self):
         """Indicator RDA-A1-01M.
 
