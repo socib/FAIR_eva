@@ -1012,6 +1012,28 @@ class Plugin(Evaluator):
         # can be equivalent to consider them FAIR.
         (points, msg_list) = self.rda_i1_01m()
         return (points, msg_list)
+    
+    def rda_i2_01d(self):
+        """Indicator RDA-A1-01M.
+
+        This indicator is linked to the following principle: I2: (Meta)data use vocabularies that follow
+        the FAIR principles. More information about that principle can be found here.
+
+        The indicator requires the controlled vocabulary used for the data to conform to the FAIR
+        principles, and at least be documented and resolvable using globally unique
+
+        Returns
+        -------
+        points
+            A number between 0 and 100 to indicate how well this indicator is supported
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        # Overrided to match rda_i1_01d since having vocabularies registered in FAIRsharing 
+        # can be equivalent to consider them FAIR.
+        (points, msg_list) = self.rda_i1_01d()
+        return (points, msg_list)
+
 
     
     
