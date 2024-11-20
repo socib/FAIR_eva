@@ -1034,6 +1034,137 @@ class Plugin(Evaluator):
         (points, msg_list) = self.rda_i1_01d()
         return (points, msg_list)
 
+    def rda_i3_01m(self):
+        """Indicator RDA-I3-01M: Metadata includes references to other metadata.
+
+        This indicator is linked to the following principle: I3: (Meta)data include qualified references
+        to other (meta)data. More information about that principle can be found here.
+
+        The indicator is about the way that metadata is connected to other metadata, for example
+        through links to information about organisations, people, places, projects or time periods
+        that are related to the digital object that the metadata describes.
+
+        Returns
+        -------
+        points
+            100/100 if ORCID is found in the metadata
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        points, msg = self.rda_i3_03m()
+
+        return (points, msg)
+    
+    def rda_i3_01d(self):
+        """Indicator RDA-I3-01D: Data includes references to other data.
+
+        This indicator is linked to the following principle: I3: (Meta)data include qualified references
+        to other (meta)data. More information about that principle can be found here.
+
+        The indicator is about the way that metadata is connected to other metadata, for example
+        through links to information about organisations, people, places, projects or time periods
+        that are related to the digital object that the metadata describes.
+
+        Returns
+        -------
+        points
+            Currently returns 0 points, as it requires inspecting the content of the data
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        points = 0
+        msg = "This test implies checking the presence of qualified references within the content of the data. As it is defined, its implementation is too costly."
+
+        return (points, [{"message": msg, "points": points}])
+
+    def rda_i3_02m(self):
+        """Indicator RDA-I3-02M: Metadata includes references to other data.
+
+        This indicator is linked to the following principle: I3: (Meta)data include qualified references
+        to other (meta)data. More information about that principle can be found here.
+
+        This indicator is about the way metadata is connected to other data, for example linking to
+        previous or related research data that provides additional context to the data. Please note
+        that this is not about the link from the metadata to the data it describes; that link is
+        considered in principle F3 and in indicator RDA-F3-01M.
+
+        Returns
+        -------
+        points
+            Returns 100/100 if qualified references are found (0/100 otherwise)
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        points = 0
+        msg = "No references to other data."
+
+        return (points, [{"message": msg, "points": points}])
+
+    def rda_i3_02d(self):
+        """Indicator RDA-I3-02D: Data includes qualified references to other data.
+
+        This indicator is linked to the following principle: I3: (Meta)data include qualified references
+        to other (meta)data. More information about that principle can be found here.
+
+        The indicator is about the way that metadata is connected to other metadata, for example
+        through links to information about organisations, people, places, projects or time periods
+        that are related to the digital object that the metadata describes.
+
+        Returns
+        -------
+        points
+            Currently returns 0 points, as it requires inspecting the content of the data
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+
+        points = 0
+        msg = "This test implies checking the presence of qualified references within the content of the data. As it is defined, its implementation is too costly."
+
+        return (points, [{"message": msg, "points": points}])
+
+    @ConfigTerms(term_id="terms_relations", validate=True)
+    def rda_i3_03m(self, **kwargs):
+        """Indicator RDA-I3-03M: Metadata includes qualified references to other metadata.
+
+        This indicator is linked to the following principle: I3: (Meta)data include qualified references
+        to other (meta)data. More information about that principle can be found here.
+
+        This indicator is about the way metadata is connected to other metadata, for example to
+        descriptions of related resources that provide additional context to the data. The references
+        need to be qualified which means that the relation
+
+        Returns
+        -------
+        points
+            100/100 if the ORCID appears in the metadata (ORCID considered a qualified reference to the Author of the file)
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        has_qualified_references = False
+        msg_list = []
+        for element, element_data in kwargs.items():
+            validation_data = element_data.get("validation", {})
+            if validation_data:
+                for vocabulary, vocabulary_validation_data in validation_data.items():
+                    if vocabulary_validation_data["valid"]:
+                        has_qualified_references = True
+                        msg_list.append(
+                            "'%s' element uses vocabulary %s in '%s'"
+                            % (element, vocabulary, vocabulary_validation_data["valid"])
+                        )
+
+        if has_qualified_references:
+            points = 100
+            msg = "Metadata has qualified references to other metadata: %s" % ", ".join(
+                msg_list
+            )
+        else:
+            points = 0
+            msg = "Metadata does not have qualified references to other metadata"
+
+        return (points, [{"message": msg, "points": points}])
+
 
     
     
