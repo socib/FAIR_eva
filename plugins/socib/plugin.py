@@ -288,6 +288,8 @@ class Plugin(Evaluator):
         global _
         _ = super().translation()
 
+        self.base_url = ast.literal_eval(self.config[plugin]["base_url"])
+
         # You need a way to get your metadata in a similar format
         metadata_sample = self.get_metadata()
         # self.metadata = pd.json_normalize(metadata_sample)
@@ -325,6 +327,9 @@ class Plugin(Evaluator):
             self.config[plugin]["metadata_schemas"]
         )
         self.metadata_quality = 100  # Value for metadata balancing
+        
+        # This a custom field for SOCIB Data Repository
+        self.data_standard = ast.literal_eval(self.config[plugin]["data_standard"])
 
     @property
     def metadata_utils(self):
@@ -367,6 +372,52 @@ class Plugin(Evaluator):
         return metadata
 
     def get_metadata(self):
+        data_product_slug = "glider-canales"
+        final_url = (
+            self.base_url + "/data-products/" + data_product_slug + "/metadata"
+        )
+
+        error_in_metadata = False
+        headers = {
+            "api_key": self.config[self.name]["socib_api_key"]
+        }
+        response = requests.get(
+            final_url,
+            headers=headers,
+        )
+        if not response.ok:
+            msg = (
+                "Error while connecting to metadata repository: %s (status code: %s)"
+                % (response.url, response.status_code)
+            )
+            error_in_metadata = True
+
+        # headers
+        self.metadata_endpoint_headers = response.headers
+        logger.debug(
+            "Storing headers from metadata repository: %s"
+            % self.metadata_endpoint_headers
+        )
+
+        dicion = response.json()
+
+        metadata_schema = dicion['json_ld']['schemaVersion']
+        
+        eml_schema = metadata_schema
+        metadata = []
+        dicion = dicion['json_ld']
+        for key in dicion.keys():
+            value = dicion[key]
+            if str(type(value)) == "<class 'list'>":
+                for element in value:
+                    metadata.append([eml_schema, key, element, None])
+            else:
+                metadata.append([eml_schema, key, dicion[key], None])
+
+        return metadata
+
+
+    def get_metadata_old(self):
         data_product_slug = self.item_id
         client = get_api_client(self.config[self.name]["socib_api_key"])
 
@@ -784,3 +835,183 @@ class Plugin(Evaluator):
         (_msg, _points) = self.eval_validated_basic(kwargs)
 
         return (_points, [{"message": _msg, "points": _points}])
+    
+    def rda_i1_01d(self, **kwargs):
+        """Indicator RDA-I1-01D: Data uses knowledge representation expressed in standarised format.
+
+        This indicator is linked to the following principle: I1: (Meta)data use a formal,
+        accessible, shared, and broadly applicable language for knowledge representation.
+
+        The indicator serves to determine that an appropriate standard is used to express
+        knowledge, in particular the data model and format.
+
+        Returns
+        -------
+        points
+            100/100 If the file format is listed under IANA Internet Media Types
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        data_standards = self.data_standard
+
+        elements_using_vocabulary = []
+        for data_standard in data_standards:
+            result = self.vocabulary.get_fairsharing(data_standard)
+            result_filtered = [item for item in result if item["attributes"]["abbreviation"] == data_standard]
+            if result_filtered:
+                elements_using_vocabulary.append(data_standard)
+            else:    
+                logger.warning(
+                    "Data standard '%s' not found under FAIRsharing registry"
+                    % data_standard
+                )
+
+        _msg = (
+            "Found %s (%s) out of %s (%s) data standards using standard vocabularies"
+            % (
+                len(elements_using_vocabulary),
+                ", ".join(elements_using_vocabulary),
+                len(data_standards),
+                ", ".join(data_standards)
+            )
+        )
+        logger.info(_msg)
+
+        # Get scores
+        _points = 0
+        if data_standards:
+            _points = len(elements_using_vocabulary) / len(data_standards) * 100
+
+        return (_points, _msg)
+    
+    def rda_i1_02m(self, **kwargs):
+        """Indicator RDA-I1-02M: Metadata uses machine-understandable knowledge representation.
+
+        This indicator is linked to the following principle: I1: (Meta)data use a formal, accessible,
+        shared, and broadly applicable language for knowledge representation. M
+
+        This indicator focuses on the machine-understandability aspect of the data. This means that
+        data should be readable and thus interoperable for machines without any requirements such
+        as specific translators or mappings.
+
+        Returns
+        -------
+        points
+            - 100/100 if metadata uses machine understandable knowledge representation (0/100 otherwise)
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        _title = "Metadata uses machine-understandable knowledge representation"
+        _checks = {
+            "FAIR-EVA-I1-02M-1": {
+                "title": "Media type gathered from HTTP headers",
+                "critical": True,
+                "success": False,
+            },
+            "FAIR-EVA-I1-02M-2": {
+                "title": "Media type listed under IANA Internet Media Types",
+                "critical": True,
+                "success": False,
+            },
+        }
+        _points = 0
+
+        # FAIR-EVA-I1-02M-1: Get serialization media type from HTTP headers
+        content_type = self.metadata_endpoint_headers.get("Content-Type", "")
+        if content_type:
+            _msg = "Found media type '%s' through HTTP headers" % content_type
+            logger.info(_msg)
+            _checks["FAIR-EVA-I1-02M-1"].update(
+                {
+                    "success": True,
+                    "points": 100,
+                }
+            )
+        else:
+            _msg = (
+                "The metadata standard in use does not provide a machine-understandable knowledge expression: %s"
+                % self.metadata_standard
+            )
+            logger.warning(_msg)
+        _checks["FAIR-EVA-I1-02M-1"].update(
+            {
+                "message": _msg,
+            }
+        )
+
+        # FAIR-EVA-I1-02M-2: Serialization format listed under IANA Media Types
+        if content_type in self.vocabulary.get_iana_media_types():
+            _msg = (
+                "Metadata serialization format '%s' listed under IANA Media Types"
+                % content_type
+            )
+            logger.info(_msg)
+            _checks["FAIR-EVA-I1-02M-2"].update(
+                {
+                    "success": True,
+                    "points": 100,
+                }
+            )
+            _points = 100
+        else:
+            _msg = (
+                "Metadata serialization '%s' format is not listed under IANA Internet Media Types"
+                % content_type
+            )    
+            logger.warning(_msg)
+        _checks["FAIR-EVA-I1-02M-2"].update(
+            {
+                "message": _msg,
+            }
+        )
+
+        return (_points, _checks)
+
+    def rda_i1_02d(self, **kwargs):
+        """Indicator RDA-I1-02D: Data uses machine-understandable knowledge representation.
+
+        This indicator is linked to the following principle: I1: (Meta)data use a formal, accessible,
+        shared, and broadly applicable language for knowledge representation.
+
+        This indicator focuses on the machine-understandability aspect of the data. This means that
+        data should be readable and thus interoperable for machines without any requirements such
+        as specific translators or mappings.
+
+        Returns
+        -------
+        points
+            - 100/100 if data models correspond to machine readable formats
+            - Otherwise, the resultant score will be proportional to the percentage of machine readable formats
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+
+        # Overrided to match rda_i1_01d since I don't see the difference.
+        (points, msg_list) = self.rda_i1_01d()
+        return (points, msg_list)
+
+    @ConfigTerms(term_id="terms_cv")
+    def rda_i2_01m(self, **kwargs):
+        """Indicator RDA-I2-01D: Data uses FAIR-compliant vocabularies.
+
+        This indicator is linked to the following principle: I2: (Meta)data use vocabularies that follow
+        the FAIR principles.
+
+        The indicator requires the controlled vocabulary used for the data to conform to the FAIR
+        principles, and at least be documented and resolvable using globally unique.
+
+        Returns
+        -------
+        points
+            A number between 0 and 100 to indicate how well this indicator is supported
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+
+        # Overrided to match rda_i1_01m since having vocabularies registered in FAIRsharing 
+        # can be equivalent to consider them FAIR.
+        (points, msg_list) = self.rda_i1_01m()
+        return (points, msg_list)
+
+    
+    
