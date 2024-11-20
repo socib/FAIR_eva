@@ -1165,6 +1165,92 @@ class Plugin(Evaluator):
 
         return (points, [{"message": msg, "points": points}])
 
+    @ConfigTerms(term_id="terms_license")
+    def rda_r1_1_02m(self, license_list=[], machine_readable=False, **kwargs):
+        """Indicator R1.1-02M: Metadata refers to a standard reuse license.
+
+        This indicator is linked to the following principle: R1.1: (Meta)data are released with a clear
+        and accessible data usage license.
+
+        This indicator requires the reference to the conditions of reuse to be a standard licence,
+        rather than a locally defined license.
+
+        Returns
+        -------
+        points
+            100/100 if the license is listed under the SPDX licenses
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        license_list = kwargs["License"]
+
+        points = 0
+        max_points = 100
+
+        license_num = len(license_list)
+        license_standard_list = []
+        points_per_license = round(max_points / license_num)
+        for _license in license_list:
+            if ut.is_spdx_license(_license, machine_readable=machine_readable):
+                license_standard_list.append(_license)
+                points += points_per_license
+                logger.debug(
+                    "License <%s> is considered as standard by SPDX: adding %s points"
+                    % (_license, points_per_license)
+                )
+        if points == 100:
+            msg = (
+                "License/s in use are considered as standard according to SPDX license list: %s"
+                % license_standard_list
+            )
+        elif points > 0:
+            msg = (
+                "A subset of the license/s in use (%s out of %s) are standard according to SDPX license list: %s"
+                % (len(license_standard_list), license_num, license_standard_list)
+            )
+        else:
+            msg = (
+                "None of the license/s defined are standard according to SPDX license list: %s"
+                % license_list
+            )
+        msg = " ".join([msg, "(points: %s)" % points])
+        logger.info(msg)
+
+        return (points, [{"message": msg, "points": points}])
+
+    @ConfigTerms(term_id="terms_license")
+    def rda_r1_1_03m(self, **kwargs):
+        """Indicator R1.1-03M: Metadata refers to a machine-understandable reuse
+        license.
+
+        This indicator is linked to the following principle: R1.1: (Meta)data are released with a clear
+        and accessible data usage license.
+
+        This indicator is about the way that the reuse licence is expressed. Rather than being a human-readable text, the licence should be expressed in such a way that it can be processed by machines, without human intervention, for example in automated searches.
+
+        Returns
+        -------
+        points
+            100/100 if the license is provided in such a way that is machine understandable
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        license_list = kwargs["License"]
+
+        _points_license, _msg_license = self.rda_r1_1_02m(
+            license_list=license_list, machine_readable=True
+        )
+        if _points_license == 100:
+            _msg = "License/s are machine readable according to SPDX"
+        elif _points_license == 0:
+            _msg = "License/s are not machine readable according to SPDX"
+        else:
+            _msg = "A subset of the license/s are machine readable according to SPDX"
+        logger.info(_msg)
+
+        return (_points_license, [{"message": _msg, "points": _points_license}])
+
+
 
     
     
