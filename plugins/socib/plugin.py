@@ -331,8 +331,6 @@ class Plugin(Evaluator):
         # This a custom field for SOCIB Data Repository
         self.data_standard = ast.literal_eval(self.config[plugin]["data_standard"])
 
-        self.data_standard = ast.literal_eval(self.config[plugin]["terms_provenance"])
-
     @property
     def metadata_utils(self):
         return MetadataValues()
@@ -1300,6 +1298,51 @@ class Plugin(Evaluator):
             )
 
         return (points, msg_list)
+
+    def rda_r1_2_02m(self):
+        """Indicator RDA-A1-01M
+        This indicator is linked to the following principle: R1.2: (Meta)data are associated with
+        detailed provenance. More information about that principle can be found here.
+        This indicator requires that the metadata provides provenance information according to a
+        cross-domain language.
+        Technical proposal:
+        Parameters
+        ----------
+        item_id : str
+            Digital Object identifier, which can be a generic one (DOI, PID), or an internal (e.g. an
+            identifier from the repo)
+        Returns
+        -------
+        points
+            A number between 0 and 100 to indicate how well this indicator is supported
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        points = 0
+        msg = [
+            {
+                "message": _("No metadata provenance information expressed in a cross-domain language."),
+                "points": points,
+            }
+        ]
+        return (points, msg)
+    
+    def rda_r1_3_01d(self, **kwargs):
+        """Indicator RDA-R1.3-01D: Data complies with a community standard.
+
+        This indicator is linked to the following principle: R1.3: (Meta)data meet domain-relevant
+        community standards.
+
+        This indicator requires that data complies with community standards.
+
+        Returns
+        --------
+        points
+           100/100 if the data standard appears in Fairsharing (0/100 otherwise)
+        """
+        (_points, _msg) = self.rda_i1_01d()
+
+        return (_points, [{"message": _msg, "points": _points}])
 
 
 
