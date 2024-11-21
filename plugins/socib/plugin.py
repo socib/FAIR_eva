@@ -56,8 +56,8 @@ class MetadataValues(MetadataValuesBase):
                 _values = cls._get_description(element_values)
             elif element == "Type":
                 _values = cls._get_type(element_values)
-            elif element == "Organization Identifier":
-                _values = cls._get_organization(element_values)
+#            elif element == "Organization Identifier":
+#                _values = cls._get_organization(element_values)
             elif element == "Language":
                 _values = cls._get_language(element_values)
             elif element == "License":
@@ -330,6 +330,8 @@ class Plugin(Evaluator):
         
         # This a custom field for SOCIB Data Repository
         self.data_standard = ast.literal_eval(self.config[plugin]["data_standard"])
+
+        self.data_standard = ast.literal_eval(self.config[plugin]["terms_provenance"])
 
     @property
     def metadata_utils(self):
@@ -1249,6 +1251,56 @@ class Plugin(Evaluator):
         logger.info(_msg)
 
         return (_points_license, [{"message": _msg, "points": _points_license}])
+    
+    @ConfigTerms(term_id="terms_provenance")
+    def rda_r1_2_01m(self, **kwargs):
+        """Indicator R1.2-01M: Metadata includes provenance information about community-
+        specific standard.
+
+        This indicator is linked to the following principle: R1.2: (Meta)data are associated with detailed provenance.
+
+        This indicator requires the metadata to include information about the provenance of the data, i.e. information about the origin, history or workflow that generated the data, in a way that is compliant with the standards that are used in the community for which the data is curated.
+
+        Implementation accorfding to what it is suggested in RDA documenation:
+          - FAIRsharing lists standards form provenance.
+          - According to PAV (Provenance Authoring and Versioning): https://pav-ontology.github.io/pav/, 
+            I have adapted it to what we have in schema.org at the moment.
+        
+        Returns
+        -------
+        points
+            100/100 if provenance information is provided
+        msg
+            Message with the results or recommendations to improve this indicator
+        """
+        msg_list = []
+        points = 0
+
+        term_data = kwargs["terms_provenance"]
+        term_metadata = term_data["metadata"]
+
+        msg_st_list = []
+        for index, row in term_metadata.iterrows():
+            msg_st_list.append(
+                _("Metadata found for provenance") + ": " + row["element"]
+            )
+            logging.debug(_("Metadata found for provenance") + ": " + row["element"])
+
+        if msg_st_list:
+            points = 100
+            msg_st_list = set(msg_st_list)
+            msg_list.append({"message": ", ".join(msg_st_list), "points": points})
+        else:
+            points = 0
+            msg_list.append(
+                {
+                    "message": _("No metadata for provenance found"),
+                    "points": points,
+                }
+            )
+
+        return (points, msg_list)
+
 
 
 
