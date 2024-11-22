@@ -208,6 +208,10 @@ def indicator_table(data):
     elif data["score"]["weight"] == 2:
         level = "Recommendable"
 
+    for index, message in enumerate(data["msg"]):
+        if str(type(message["message"])) == "<class 'list'>":
+            data["msg"][index]["message"] = "\n".join(message)
+
     if data["points"] == 100:
         table = [
             (_l("Indicator Level"), Paragraph(level)),
@@ -216,7 +220,11 @@ def indicator_table(data):
                 _l("Technical Implementation"),
                 Paragraph(_l("%s.technical" % data["name"])),
             ),
-            (_l("Technical feedback"), Paragraph(data["msg"][:500])),
+            (_l("Technical feedback"), 
+                Paragraph(
+                    "\n".join((message["message"][:500] for message in data["msg"]))
+                )
+            ),
         ]
     else:
         st = BeautifulSoup(_l("%s.tips" % data["name"]))
@@ -228,7 +236,11 @@ def indicator_table(data):
                 _l("Technical Implementation"),
                 Paragraph(_l("%s.technical" % data["name"])),
             ),
-            (_l("Technical feedback"), Paragraph(data["msg"][:350])),
+            (_l("Technical feedback"), 
+                Paragraph(
+                    "\n".join((message["message"][:350] for message in data["msg"]))
+                )
+            ),
             (_l("Tips"), Paragraph(tips)),
         ]
     return table
