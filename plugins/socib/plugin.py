@@ -335,42 +335,6 @@ class Plugin(Evaluator):
     def metadata_utils(self):
         return MetadataValues()
 
-    # TO REDEFINE - HOW YOU ACCESS METADATA?
-    def get_metadata_flat(self):
-        data_product_slug = self.item_id
-        client = get_api_client(self.config[self.name]["socib_api_key"])
-
-#       product = client.get_data_product_metadata(data_product_slug)
-        product = client.get_data_product_metadata("glider-canales")
-        product_metadata = flatten(product['json_ld'], '.')
-
-        metadata_schema = product['json_ld']['schemaVersion']
-
-        md = []
-        try:
-            for key in product_metadata:
-                if '.' in key:
-                    element, qualifier = key.split('.', 1)
-                    qualifier = re.sub('\d+.', '', qualifier)
-                else:
-                    element = key
-                    qualifier = None
-
-                text_value = product_metadata[key]
-                md.append([text_value, metadata_schema, element, qualifier])
-            metadata = pd.DataFrame(
-                md, columns=["text_value", "metadata_schema", "element", "qualifier"]
-                
-            )
-        except Exception as e:
-            logger.error(
-                "get_metadata_api Problem creating Metadata from API: %s when calling URL"
-                % e
-            )
-            metadata = []
-
-        return metadata
-
     def get_metadata(self):
         # Step 1: obtain data product slug from DataCite Fabrica REST API
         datacite_api_url = self.item_id.replace("doi.org", "api.datacite.org/dois")
@@ -432,56 +396,6 @@ class Plugin(Evaluator):
                     metadata.append([eml_schema, key, element, None])
             else:
                 metadata.append([eml_schema, key, dicion[key], None])
-
-        return metadata
-
-
-    def get_metadata_old(self):
-        data_product_slug = self.item_id
-        client = get_api_client(self.config[self.name]["socib_api_key"])
-
-#       product = client.get_data_product_metadata(data_product_slug)
-        product = client.get_data_product_metadata("glider-canales")
-#        product_metadata = flatten(product['json_ld'], '.')
-
-        metadata_schema = product['json_ld']['schemaVersion']
-        
-        eml_schema = metadata_schema
-        metadata_sample = []
-        dicion = product['json_ld']
-        for key in dicion.keys():
-            value = dicion[key]
-            if str(type(value)) == "<class 'list'>":
-                for element in value:
-                    metadata_sample.append([eml_schema, key, element, None])
-            else:
-                metadata_sample.append([eml_schema, key, dicion[key], None])
-
-        return metadata_sample
-
-
-        md = []
-        try:
-            for key in product_metadata:
-                if '.' in key:
-                    element, qualifier = key.split('.', 1)
-                    qualifier = re.sub('\d+.', '', qualifier)
-                else:
-                    element = key
-                    qualifier = None
-
-                text_value = product_metadata[key]
-                md.append([text_value, metadata_schema, element, qualifier])
-            metadata = pd.DataFrame(
-                md, columns=["text_value", "metadata_schema", "element", "qualifier"]
-                
-            )
-        except Exception as e:
-            logger.error(
-                "get_metadata_api Problem creating Metadata from API: %s when calling URL"
-                % e
-            )
-            metadata = []
 
         return metadata
 
