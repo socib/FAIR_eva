@@ -99,7 +99,7 @@ class ConfigTerms(property):
 
             if not has_metadata:
                 logger.warning(msg)
-                return (0, msg)
+                return (0, [msg])
 
             # Harmonization of metadata terms, homogenization of the data type of the metadata values & validation of those metadata values in accordance with CVs
             _msg = "Proceeding with stages of: 1) Harmonization of metadata terms, 2) Homogenization of data types of metadata values"
