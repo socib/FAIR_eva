@@ -723,6 +723,8 @@ class Plugin(Evaluator):
 
         if return_protocol:
             return (points, msg_list, protocol)
+        
+        return (points, msg_list)
 
     def rda_a1_05d(self):
         """Indicator RDA-A1-01M.
