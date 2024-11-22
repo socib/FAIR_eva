@@ -372,17 +372,34 @@ class Plugin(Evaluator):
         return metadata
 
     def get_metadata(self):
-        data_product_slug = "glider-canales"
-        final_url = (
+        # Step 1: obtain data product slug from DataCite Fabrica REST API
+        datacite_api_url = self.item_id.replace("doi.org", "api.datacite.org/dois")
+
+        logging.debug("Connecting to the DataCite Fabrica REST API: %s" % datacite_api_url)
+        response = requests.get(datacite_api_url)
+
+        if not response.ok:
+            msg = "Error while connecting to the DataCite Fabrica REST API: %s" % (datacite_api_url, response.status_code)
+            logging.error(msg)
+            raise Exception(msg)
+        
+        response_dict = response.json()
+
+        doi_url = response_dict["data"]["attributes"]["url"]
+        index = doi_url.find("/data-catalog/") + len("/data-catalog/") 
+        data_product_slug = doi_url[index:]
+
+        # Step 2: access metadata expressed in JSON-LD and schema.org: from the SOCIB API
+        socib_api_url = (
             self.base_url + "/data-products/" + data_product_slug + "/metadata"
         )
-
-        error_in_metadata = False
         headers = {
             "api_key": self.config[self.name]["socib_api_key"]
         }
+
+        logging.debug("Connecting to the SOCIB REST API: %s" % socib_api_url)
         response = requests.get(
-            final_url,
+            socib_api_url,
             headers=headers,
         )
         if not response.ok:
@@ -390,15 +407,17 @@ class Plugin(Evaluator):
                 "Error while connecting to metadata repository: %s (status code: %s)"
                 % (response.url, response.status_code)
             )
-            error_in_metadata = True
+            logging.error(msg)
+            raise Exception(msg)
 
-        # headers
+        # Storing headers
         self.metadata_endpoint_headers = response.headers
         logger.debug(
             "Storing headers from metadata repository: %s"
             % self.metadata_endpoint_headers
         )
 
+        # Step 3: processing returned metadata as part of the FAIR Eva dataflow 
         dicion = response.json()
 
         metadata_schema = dicion['json_ld']['schemaVersion']
