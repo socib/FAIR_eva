@@ -2222,14 +2222,10 @@ class Evaluator(object):
            - 100/100 if the metadata standard is machine understandable (checked through FAIRsharing)
            - 0/100 otherwise
         """
-        msg_list = []
-        points = 0
-
         if self.metadata_standard == []:
-            return (points, [{"message": msg, "points": points}])
+            return (points, [{"message": _("No data standard specified"), "points": 0}])
 
-        points, msg = self.rda_r1_3_01m()
-        msg_list.append(msg)
+        points, msg_list = self.rda_r1_3_01m()
         if points == 100:
             msg_list.append(
                 {
@@ -2257,11 +2253,8 @@ class Evaluator(object):
            - 100/100 if the data format is machine understandable
            - 0/100 otherwise
         """
-        msg_list = []
-        points = 0
 
-        points, msg = self.rda_r1_3_01d()
-        msg_list.append(msg)
+        points, msg_list = self.rda_r1_3_01d()
         if points == 100:
             msg_list.append(
                 {
