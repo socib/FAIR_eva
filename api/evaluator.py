@@ -518,22 +518,6 @@ class Evaluator(object):
             self.metadata_standard = ast.literal_eval(
                 self.config[self.name]["metadata_standard"]
             )
-            self.fairsharing_username = ast.literal_eval(
-                self.config["vocabularies:fairsharing"]["remote_username"]
-            )
-
-            self.fairsharing_password = ast.literal_eval(
-                self.config["vocabularies:fairsharing"]["remote_password"]
-            )
-            self.fairsharing_metadata_path = ast.literal_eval(
-                self.config["vocabularies:fairsharing"]["metadata_path"]
-            )
-            self.fairsharing_formats_path = ast.literal_eval(
-                self.config["vocabularies:fairsharing"]["local_path"]
-            )
-            self.internet_media_types_path = ast.literal_eval(
-                self.config["internet media types"]["path"]
-            )
             self.metadata_schemas = ast.literal_eval(
                 self.config[self.name]["metadata_schemas"]
             )
