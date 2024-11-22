@@ -884,7 +884,7 @@ class Plugin(Evaluator):
         if data_standards:
             _points = len(elements_using_vocabulary) / len(data_standards) * 100
 
-        return (_points, _msg)
+        return (_points, [{"message": _msg, "points": _points}])
     
     def rda_i1_02m(self, **kwargs):
         """Indicator RDA-I1-02M: Metadata uses machine-understandable knowledge representation.
@@ -967,7 +967,7 @@ class Plugin(Evaluator):
             }
         )
 
-        return (_points, _checks)
+        return (_points, [{"message": _msg, "points": _points}])
 
     def rda_i1_02d(self, **kwargs):
         """Indicator RDA-I1-02D: Data uses machine-understandable knowledge representation.
