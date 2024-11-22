@@ -749,7 +749,7 @@ class Plugin(Evaluator):
         msg_list.append(
             {
                 "message": _(
-                    "SOCIB Data Repository does not support machine-actionable access to data"
+                    "SOCIB Data Repository does not support machine-actionable access to data from their persistent identifier (ie. DOI)"
                 ),
                 "points": points,
             }
