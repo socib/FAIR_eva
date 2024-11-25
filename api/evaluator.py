@@ -253,6 +253,9 @@ class ConfigTerms(property):
                     #       }
                     kwargs.update({term_key_harmonized: term_values_list})
 
+                    # Added because otherwise some tests functions are unable to work
+                    kwargs.update({self.term_id: {"list": term_list, "metadata": term_metadata}})
+
             logger.info(
                 "Passing metadata elements and associated values to wrapped method '%s': %s"
                 % (wrapped_func.__name__, kwargs)
