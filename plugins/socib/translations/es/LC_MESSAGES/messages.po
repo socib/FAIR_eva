@@ -687,13 +687,13 @@ msgid "rda_a1_1_01d.tips"
 msgstr "Actualmente REPOSITORY no ofrece ninguna API abierta, gratis y universal para acceso automático de ficheros datos pero lo hará próximamente"
 
 msgid "rda_a1_2_01d"
-msgstr "RDA-A1.2-02D - Los datos son accesibles a través de un protocolo que soporta autenticación y autorización"
+msgstr "RDA-A1.2-01D - Los datos son accesibles a través de un protocolo que soporta autenticación y autorización"
 
 msgid "rda_a1_2_01d.indicator"
 msgstr "Este indicador está vinculado al siguiente principio: A1.2: El protocolo permite una autenticación y autorización cuando sea necesario. El indicador requiere la forma en que se puede autenticar y autorizar el acceso al objeto digital y que la accesibilidad a los datos se describe específicamente y se documenta adecuadamente."
 
 msgid "rda_a1_2_01d.technical"
-msgstr "Esta prueba se implementa para cada plugin de FAIR EVA. En el caso del plugin para REPOSITORY se comprueba que los datos son accesibles a través del navegador y la autenticación y autorización están definidas (CSIC CAS)"
+msgstr "Esta prueba se implementa para cada plugin de FAIR EVA. En el caso de SOCIB, el acceso al objeto digital está sujeto al acceso autorizado de un usuario registrado en SOCIB"
 
 msgid "rda_a1_2_01d.tips"
 msgstr "Los datos son accesibles a través del navegador. En caso de problemas, contactar con REPOSITORY (<span style=\"font-weight:bold;color:#34a853;\">REPOSITORY@bib.csic.es</span>)."
@@ -817,7 +817,7 @@ msgid "rda_i3_02m.technical"
 msgstr "Comprueba metadatos como relación o colaborador y también si esos enlaces son identificadores persistentes (ORCID para personas, DOI o Handle, etc. para objetos, gracias al paquete idutils)"
 
 msgid "rda_i3_02m.tips"
-msgstr "Enriquece el registro de metadatos del objeto que se está describiendo con aquellos metadatos que permiten empaquetar los identificadores de la información relacionada con el objeto (por ejemplo, ORCID, DOI, handle, PURL, ...si existen). Las <span style=\"text-decoration:underline;-webkit-text-decoration-skip:none;text-decoration-skip-ink:none;color:#1155cc;\"><a target=\"_blank\" href=\"https://REPOSITORY.es/handle/10261/81323\">plantillas de REPOSITORY</a></span> indican su uso correcto y en caso de dudas ponte en contacto con <span style=\"font-weight:bold;color:#34a853;\">REPOSITORY@bib.csic.es</span>."
+msgstr "Enriquece el registro de metadatos del objeto que se está describiendo con aquellos metadatos que permiten empaquetar los identificadores de la información relacionada con el objeto (por ejemplo, ORCID, DOI, handle, PURL, ...si existen)."
 
 msgid "rda_i3_02d"
 msgstr "RDA-I3-02D - Los datos incluyen referencias cualificadas a otros datos"
@@ -829,7 +829,7 @@ msgid "rda_i3_02d.technical"
 msgstr "Este test implementa el realizado en RDA-I3-02M. Puede ser redefinido por el plugin."
 
 msgid "rda_i3_02d.tips"
-msgstr "Enriquece el registro de metadatos del objeto que se está describiendo con aquellos metadatos que permiten empaquetar los identificadores de la información relacionada con el objeto (por ejemplo, ORCID, DOI, handle, PURL, ...si existen). Las <span style=\"text-decoration:underline;-webkit-text-decoration-skip:none;text-decoration-skip-ink:none;color:#1155cc;\"><a target=\"_blank\" href=\"https://REPOSITORY.es/handle/10261/81323\">plantillas de REPOSITORY</a></span> indican su uso correcto y en caso de dudas ponte en contacto con <span style=\"font-weight:bold;color:#34a853;\">REPOSITORY@bib.csic.es</span>."
+msgstr "Enriquece el registro de metadatos del objeto que se está describiendo con aquellos metadatos que permiten empaquetar los identificadores de la información relacionada con el objeto (por ejemplo, ORCID, DOI, handle, PURL, ...si existen)."
 
 msgid "rda_i3_03m"
 msgstr "RDA-I3-03M - Los metadatos incluyen referencias cualificadas a otros metadatos"
@@ -889,7 +889,7 @@ msgid "rda_r1_1_02m.technical"
 msgstr "<p>Comprueba la presencia de informaci&oacute;n de licencia en los metadatos (en metadato dc.rights.license) y si est&aacute; incluida en la lista&nbsp;<a>https://spdx.org/licenses/licenses.json</a></p>"
 
 msgid "rda_r1_1_02m.tips"
-msgstr "Incluye la licencia de uso del recurso en el metadato dc.rights.license en su formato URL si lo tiene (por ejemplo, https://creativecommons.org/licenses/by-nc-sa/4.0/). La <span style=\"text-decoration:underline;-webkit-text-decoration-skip:none;text-decoration-skip-ink:none;color:#1155cc;\"><a target=\"_blank\" href=\"https://REPOSITORY.es/sites/ayuda_fair_data/descripcion.html\">herramienta</a></span> ayuda a elegir la licencia más apropiada para datos de investigación y software. Si tu colección de datos no puede estar en acceso abierto por favor indica en el metadato <span style=\"text-decoration:underline;-webkit-text-decoration-skip:none;text-decoration-skip-ink:none;color:#1155cc;\"><a target=\"_blank\" href=\"https://REPOSITORY.es/sites/ayuda_fair_data/descripcion.html\">dc.description</a></span> el porqué; y si es posible un email de contacto en el caso en que se consideren solicitudes de copias privadas y/o bajo determinadas circunstancias de uso. <span style=\"font-weight:bold;\">NOTA</span>: Los items de REPOSITORY están protegidos por copyright, con todos los derechos reservados, a menos que se indique lo contrario mediante una licencia específica presente en el metadato correspondiente y dentro del objeto digital. La licencia de uso por defecto de REPOSITORY permite el uso de sus contenidos digitales en acceso abierto para fines educativos, de estudio o investigación, y sin fines lucrativos, sin necesidad de pedir permisos explícitos, siempre y cuando (1) se den el nombre de los autores, el título y los detalles bibliográficos completos, (2) se incluya el handle del contenido digital en REPOSITORY y (3) el contenido no sea cambiado de ninguna manera. Los registros en texto completo pueden ser harvesteados por robots para propósitos sin ánimo de lucro y de forma puntual. Si los registros en textos completos son recolectados sistemáticamente, es necesaria la autorización explícita por parte del CSIC. Los registros en texto completo no pueden ser vendidos en ningún formato o medio sin la autorización formal de los titulares del copyright."
+msgstr "Incluya una licencia considerada estándard como parte de la propiedad de schema.org https://schema.org/license."
 
 msgid "rda_r1_1_03m"
 msgstr "RDA-R1.1-03M - Los metadatos incluyen referencias a la licencia estándar interpretable por una máquina sobre la cual se publican los datos para su reutilización"

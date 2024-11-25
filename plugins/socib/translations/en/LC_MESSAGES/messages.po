@@ -631,7 +631,7 @@ msgid "rda_a1_1_01d.tips"
 msgstr "Currently REPOSITORY does not support access to data files through any open, free and universally implementable API but it will soon"
 
 msgid "rda_a1_2_01d"
-msgstr "RDA-A1.2-02D - Data is accessible through an access protocol that supports authentication and authorisation"
+msgstr "RDA-A1.2-01D - Data is accessible through an access protocol that supports authentication and authorisation"
 
 msgid "rda_a1_2_01d.indicator"
 msgstr "This indicator is linked to the following principle: A1.2: The protocol allows for an authentication and authorisation where necessary. The indicator requires the way that access to the digital object can be authenticated and authorised and that data accessibility is specifically described and adequately documented."
