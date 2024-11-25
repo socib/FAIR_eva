@@ -6,9 +6,6 @@ import sys
 import re
 import requests
 from dateutil.parser import isoparse
-from socibApi import get_api_client
-from socibApi.response import Entry
-from flatten_json import flatten
 import api.utils as ut
 from bs4 import BeautifulSoup as bs
 
