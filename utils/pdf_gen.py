@@ -405,7 +405,7 @@ def create_pdf(data, name_pdf_report, item_id, logo_FAIR, logos_CSIC, result_poi
 
     # Se incluye título y descripción:
     Story.append(Paragraph("FAIR EVA", estilos["main_title"]))
-    Story.append(Paragraph("DIGITAL.CSIC", estilos["main_title"]))
+    Story.append(Paragraph("SOCIB Data Reposotory", estilos["main_title"]))
     Story.append(
         Paragraph("Evaluation for: %s" % item_id, estilos["JustifyRight12BoldSpace"])
     )
@@ -423,7 +423,7 @@ def create_pdf(data, name_pdf_report, item_id, logo_FAIR, logos_CSIC, result_poi
 
     Story.append(Paragraph("DESCRIPCIÓN:", estilos["JustifyRight12Bold"]))
     descripcion = (
-        "FAIR EVA es un servicio web que mide el grado de alineación de los objetos digitales (principalmente datos de investigación) disponibles en el repositorio institucional DIGITAL.CSIC con los Principios FAIR. Se basa en los %s y presta especial atención a características de repositorios institucionales."
+        "FAIR EVA es una herramienta web que mide el grado de alineación de los conjuntos de datos disponibles en el Repositorio de Datos Meteoceanográficos de la ICTS SOCIB con los Principios FAIR. Se basa en los %s y presta especial atención a características de repositorios institucionales."
         % direccion
     )
     Story.append(Paragraph(descripcion, estilos["JustifyRight11"]))
