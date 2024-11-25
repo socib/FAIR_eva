@@ -41,24 +41,10 @@ class MetadataValues(MetadataValuesBase):
                 _values = cls._get_identifiers_data(element_values)
             elif element == "Temporal Coverage":
                 _values = cls._get_temporal_coverage(element_values)
-            elif element == "Spatial Coverage":
-                _values = cls._get_spatial_coverage(element_values)
             elif element == "Person Identifier":
                 _values = cls._get_person(element_values)
-            elif element == "Format":
-                _values = cls._get_formats(element_values)
             elif element == "Date":
                 _values = cls._get_date(element_values)
-            elif element == "Description":
-                _values = cls._get_description(element_values)
-            elif element == "Type":
-                _values = cls._get_type(element_values)
-#            elif element == "Organization Identifier":
-#                _values = cls._get_organization(element_values)
-            elif element == "Language":
-                _values = cls._get_language(element_values)
-            elif element == "License":
-                _values = cls._get_license(element_values)                
             else:
                 raise NotImplementedError("Self-invoking NotImplementedError exception")
         except Exception as e:
@@ -100,26 +86,6 @@ class MetadataValues(MetadataValuesBase):
         return [value_data["value"] for value_data in element_values]
 
     @classmethod
-    def _get_formats(cls, element_values):
-        """Return the list of formats defined through <availableFormats> metadata
-        attribute.
-
-        * Format EPOS PROD & DEV API:
-             "availableFormats": [{
-                 "format": "SHAPE-ZIP",
-                 "href": "https://www.ics-c.epos-eu.org/api/v1/execute/b8b5f0c3-a71c-448e-88ac-3a3c5d97b08f?format=SHAPE-ZIP",
-                 "label": "SHAPE-ZIP",
-                 "originalFormat": "SHAPE-ZIP",
-                 "type": "ORIGINAL"
-             }]
-        """
-        return list(
-            filter(
-                None, [value_data.get("format", "") for value_data in element_values]
-            )
-        )
-
-    @classmethod
     def _get_temporal_coverage(cls, element_values):
         """Return a list of tuples with temporal coverages for start and end date.
 
@@ -132,18 +98,6 @@ class MetadataValues(MetadataValuesBase):
             (value_data.get("startDate", ""), value_data.get("endDate", ""))
             for value_data in element_values
         ]
-
-    @classmethod
-    def _get_spatial_coverage(cls, element_values):
-        """Return a list of geo.box as statet in 
-        Stathis, K., Ross, C., Dreyer, B., & Vierkant, P. (2022). DataCite Metadata Schema 4.4 to Schema.org Mapping. DataCite. https://doi.org/10.14454/3w3z-sa82
-        """
-        return [
-            value_data["geo"]["box"]
-            for value_data in element_values
-            if "geo" in value_data and "box" in value_data["geo"]
-        ]
-
 
     @classmethod
     def _get_person(cls, element_values):
@@ -179,58 +133,7 @@ class MetadataValues(MetadataValuesBase):
                 continue
 
         return date_data
-
-    @classmethod
-    def _get_description(cls, element_values):
-        """
-        Return a list of descriptions
-        """
-        text_data = []
-        for text in element_values:
-            try:
-                if type(text) != str:
-                    raise ValueError
-                text_data.append(text)
-            except ValueError as e:
-                # Not a valid date: do nothing as this is not a validation step
-                continue
-
-        return text_data
-
-    @classmethod
-    def _get_type(cls, element_values):
-        """
-        Return a list of types: for the moment we consider types as descriptions
-        """
-        return cls._get_description(element_values)
-
-    @classmethod
-    def _get_language(cls, element_values):
-        """
-        Return a list of languages: for the moment we consider languages as descriptions
-        """
-        return cls._get_description(element_values)
-
-    @classmethod
-    def _get_organization(cls, element_values):
-        """
-        Return a list of organization ids
-        """
-        organization_data = [
-            value_data["@id"]
-            for value_data in element_values
-            if "@id" in value_data
-        ]
-
-        return organization_data
-    
-    @classmethod
-    def _get_license(cls, element_values):
-        """
-        Return a list of licenses: for the moment we consider licenses as descriptions
-        """
-        return cls._get_description(element_values)
-    
+        
     def _validate_license(self, licenses, vocabularies, machine_readable=False):
         license_data = {}
         for vocabulary_id, vocabulary_url in vocabularies.items():
