@@ -1,20 +1,39 @@
-FROM ubuntu:20.04
+# ========================================
+# Build flask image
+# ========================================
+FROM python:3.10-slim AS builder
 
-MAINTAINER Fernando Aguilar "aguilarf@ifca.unican.es"
+WORKDIR /usr/src/app
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-RUN apt-get update -y && \
-    apt-get install -y curl python3-pip python3-dev git vim lsof
+COPY requirements.txt ./
+RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
-RUN git clone https://github.com/ifca-advanced-computing/FAIR_eva.git
+#########
+# FINAL
+#########
+# pull official base image
+FROM python:3.10-slim
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-WORKDIR /FAIR_eva
+WORKDIR /code
 
-RUN pip3 install -r requirements.txt
+# install dependencies
+COPY --from=builder /usr/src/app/wheels /wheels
+RUN pip install --no-cache /wheels/*
+
+# Not sure why wheels are not avaialble for this module.
+RUN pip install connexion[flask,uvicorn]
+
+# copy project
+COPY . ./
+
+RUN chmod u+x start.sh
 
 EXPOSE 5000 9090
-RUN ls
-RUN mv /FAIR_eva/config.ini.template /FAIR_eva/config.ini
-RUN cd /FAIR_eva
-RUN chmod 777 start.sh
-RUN cat start.sh
-CMD /FAIR_eva/start.sh
+
+CMD ["./start.sh"]
