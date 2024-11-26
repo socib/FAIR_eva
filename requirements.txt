@@ -4,27 +4,84 @@
 # connexion requires werkzeug but connexion < 2.4.0 does not install werkzeug
 # we must peg werkzeug versions below to fix connexion
 # https://github.com/zalando/connexion/pull/1044
-werkzeug == 3.0.3
-connexion[flask,uvicorn]
-#swagger-ui-bundle == 0.0.6
-swagger-ui-bundle == 0.0.6
-flask == 2.2.5
-flask_wtf
-bs4
-psycopg2-binary
-pandas
-idutils
-Babel
-flask_babel
-bokeh == 2.3.3
-reportlab
-PyPDF2
-rdflib
-dicttoxml
-tqdm==4.66.3
-python-dwca-reader==0.15.1
-pycountry==22.3.5
+
+######### pip freeze ###########
+a2wsgi==1.10.7
+anyio==4.6.2.post1
+asgiref==3.8.1
+attrs==24.2.0
+babel==2.16.0
+beautifulsoup4==4.12.3
+bokeh==2.3.3
+bs4==0.0.2
+certifi==2024.8.30
+chardet==5.2.0
+charset-normalizer==3.4.0
+click==8.1.7
+click-plugins==1.1.1
+cligj==0.7.2
+connexion==3.1.0
+dicttoxml==1.7.16
+exceptiongroup==1.2.2
+fiona==1.10.1
+Flask==2.2.5
+flask-babel==4.0.0
+Flask-WTF==1.2.2
 geopandas==0.14.3
+h11==0.14.0
+httpcore==1.0.7
+httptools==0.6.4
+httpx==0.27.2
+idna==3.10
+idutils==1.4.2
+importlib_metadata==8.5.0
+inflection==0.5.1
+isbnlib==3.10.14
+isodate==0.7.2
+itsdangerous==2.2.0
+Jinja2==3.1.4
+jsonschema==4.23.0
+jsonschema-specifications==2024.10.1
+MarkupSafe==3.0.2
+numpy==1.26.4
+packaging==24.2
+pandas==2.2.3
+pillow==11.0.0
+prettytable==3.12.0
+psycopg2-binary==2.9.10
+pyarrow==18.1.0
+pycountry==22.3.5
+pyparsing==3.2.0
+PyPDF2==3.0.1
+pyproj==3.7.0
+python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
+python-dwca-reader==0.15.1
+python-multipart==0.0.17
+pytz==2024.2
+PyYAML==6.0.2
+rdflib==7.1.1
+referencing==0.35.1
+reportlab==4.2.5
+requests==2.32.3
+rpds-py==0.21.0
 shapely==2.0.3
-prettytable
-pyarrow
+six==1.16.0
+sniffio==1.3.1
+soupsieve==2.6
+starlette==0.41.3
+swagger-ui-bundle==0.0.6
+tornado==6.4.2
+tqdm==4.66.3
+typing_extensions==4.12.2
+tzdata==2024.2
+urllib3==2.2.3
+uvicorn==0.32.1
+uvloop==0.21.0
+watchfiles==1.0.0
+wcwidth==0.2.13
+websockets==14.1
+Werkzeug==3.0.3
+WTForms==3.2.1
+zipp==3.21.0
+
