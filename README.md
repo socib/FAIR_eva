@@ -19,7 +19,7 @@ Aguilar Gómez, F., Bernal, I. FAIR EVA: Bringing institutional multidisciplinar
 ## Quickstart
 
 ```
-docker run --name=fair_eva -p 9090:9090 -p 5000:5000 -dit --network host
+docker run --name fair_eva -d --network host
 ```
 
 # Acknowledgements
