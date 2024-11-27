@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "Python Debugger: fair.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "fair.py",
+            "console": "integratedTerminal",
+            "python": "python"
+        },
+        {
+            "name": "Python Debugger: web.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "web.py",
+            "console": "integratedTerminal",
+            "python": "python"
+        }
+ 
+    ]
+}
