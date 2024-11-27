@@ -7,9 +7,7 @@ else
     echo "<$CONFIG_FILE> does not exist, using default path (config.ini)"
 fi
 
-kill $(lsof -t -i:5000)
-kill $(lsof -t -i:9090)
-/FAIR_eva/web.py -c $CONFIG_FILE &
-/FAIR_eva/fair.py &
+python web.py -c $CONFIG_FILE &
+python fair.py &
 wait -n
 exit $?
