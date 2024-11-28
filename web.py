@@ -479,6 +479,9 @@ def export_pdf():
         result_points = 0
         weight_of_tests = 0
         for key in result:
+            if key == 'version':
+                continue
+
             g_weight = 0
             g_points = 0
             for kk in result[key]:

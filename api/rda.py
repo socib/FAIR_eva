@@ -1548,6 +1548,10 @@ def rda_all(body, eva):
             "interoperable": interoperable,
             "reusable": reusable,
         }
+
+    if eva.version:
+        result['version'] = eva.version
+
     return result, 200
 
 

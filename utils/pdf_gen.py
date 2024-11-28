@@ -415,6 +415,10 @@ def create_pdf(data, name_pdf_report, item_id, logo_FAIR, logos_CSIC, result_poi
             estilos["JustifyRight12BoldSpace"],
         )
     )
+
+    if 'version' in data:
+        Story.append(Paragraph("Version: %s" % data['version'], estilos["JustifyRight12BoldSpace"]))
+
     Story.append(Paragraph(date, estilos["JustifyRight12BoldSpace"]))
 
     url_fair = "https://www.rd-alliance.org/system/files/FAIR%20Data%20Maturity%20Model_%20specification%20and%20guidelines_v0.90.pdf"
