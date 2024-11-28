@@ -204,6 +204,7 @@ class Plugin(Evaluator):
             self.access_protocols = ["http"]
 
         # Config attributes
+        self.version = ast.literal_eval(self.config[self.name]["version"])
         self.terms_map = ast.literal_eval(self.config[self.name]["terms_map"])
 
         self.identifier_term = ast.literal_eval(self.config[plugin]["identifier_term"])
