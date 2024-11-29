@@ -15,8 +15,8 @@ controlled_vocabularies = {
 
 [local]
 only_local = False
-repo = digital_csic
-logo_url = 'https://ifca.unican.es'
+repo = socib
+logo_url = 'https://socib.es'
 title = FAIR EVA: Evaluator, Validator & Advisor
 
 [dublin-core]
@@ -44,6 +44,7 @@ oai-pmh = 'Evaluator'
 digital_csic = 'Digital.CSIC'
 dspace7 = 'DSpace7'
 epos= 'epos'
+socib = 'Socib'
 example_plugin = Example_Plugin
 signposting = Signposting
 
