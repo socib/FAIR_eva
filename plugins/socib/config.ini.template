@@ -1,0 +1,100 @@
+[socib]
+base_url = "https://api.socib.es/"
+socib_api_key = 
+version = "socib.0.0.1"
+
+
+# Mapping between plugin terms and standard terms (see main config.ini for the latter)
+# "Date" according to ISO 8601
+terms_map = {
+    '@id': 'Metadata Identifier', # and Data Identifier
+    'availableFormats': 'Format',
+    'temporalCoverage': 'Temporal Coverage',
+    'spatialCoverage': 'Spatial Coverage', 
+    'dateCreated': 'Date',
+    'datePublished': 'Date',
+    'inLanguage': 'Language',
+    'license': 'License',
+    'author': 'Person Identifier',    
+    'editor': 'Person Identifier',
+    'provider': 'Organization Identifier',
+    'publisher': 'Organization Identifier',
+    'funder': 'Organization Identifier',
+    'title': 'Title',
+    'description': 'Description',
+    '@type': 'Type',
+    'keywords': 'Keywords',
+    'paths': 'Paths',
+    'downloadURL': 'Download Link',
+    'version': 'Version',
+    'privacy': 'Privacy',
+    'url': 'URL'}
+
+# Metadata terms to find the resource identifier: we consider that the @id is referring both to the metadata record of the dataset and the dataset itself.
+identifier_term = [['@id', None],]
+identifier_term_data = [['@id', None],]
+
+# Metadata terms to check richness (generic). These terms should be included [term, qualifier]. None means no qualifier
+terms_quali_generic = [['author', None],
+                       ['editor', None],
+                       ['dateCreated', None],  # Not clear wether we are using this field and dateCreated the right way (check Datacite Metadata Standard) 
+                       ['datePublished', None],  # Not clear wether we are using this field and dateCreated the right way (check Datacite Metadata Standard) 
+                       ['description', None],
+                       ['@id', None],
+                       ['@type', None],
+                       ['publisher', None],
+                       ['provider', None],
+                       ['temporalCoverage', None],
+                       ['spatialCoverage', None],
+                       ['inLanguage', None],
+                       ['license', None], 
+                       ['keywords', None],
+                       ['funder', None]]
+
+# Metadata terms to check richness (disciplinar). These terms should be included [term, qualifier]
+terms_quali_disciplinar = [['platform_type', None],
+                           ['standard_name', None],
+                           ['feature_type', None]]
+
+# Metadata terms that defines accessibility
+terms_access = [['license', None]]
+
+# Metadata terms wich includes controlled vocabularies. More controlled vocabularies can be imlpemented in plugins
+terms_cv = [['license', ''], ['author', ''], ['editor', '']]
+
+# List of data formats that are standard for the community
+supported_data_formats = [".zip", ".nc"]
+
+# Metadata terms that defines links or relation with authors, contributors (preferebly in ORCID format)
+terms_qualified_references = [['license', ''], ['author', ''], ['editor', '']]
+
+# Metadata terms that defines links or relation with other resources, (preferebly in ORCID format, URIs or persistent identifiers)
+# There is room for improvement here: for instance one can include in the DOI metadata plenty of properties
+# to state citations, related datasets, software and so on....
+terms_relations = [['license', ''],
+                    ['author', ''],
+                    ['editor', '']]
+
+# Metadata terms that defines the license type
+terms_license = [['license', '']]
+
+#Metadata chemas to check
+metadata_schemas = [{'datacite': 'https://schema.datacite.org/meta/kernel-4.5/'}]
+
+terms_access_protocols =['http','https']
+
+metadata_standard = ['JSON-LD']
+# Not clear how to link these standards with the digital object (ask Pablo Orviz).
+data_standard = ['netCDF', 
+                'CF Standard Names',
+                'CF metadata convention']
+
+terms_data_model = []
+
+# Metadata terms that defines metadata about provenance
+terms_provenance =[['author',''], ['editor', ''], ['publisher', ''],
+     ['dateCreated', ''], ['version', ''], ['funder', '']]
+
+[internet_media_types]
+#path to internet media files file
+path = 'static/internetmediatypes190224.csv'
